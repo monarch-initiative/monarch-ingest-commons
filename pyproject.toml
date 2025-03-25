@@ -7,7 +7,10 @@ authors = [
     { name = "Patrick Golden", email = "ptgolden@email.unc.com" }
 ]
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+    "jedi>=0.19.2",
+    "libcst>=1.7.0",
+]
 
 [project.scripts]
 monarch-ingest-commons = "monarch_ingest_commons:main"
