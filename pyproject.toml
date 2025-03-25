@@ -1,0 +1,17 @@
+[project]
+name = "monarch-ingest-commons"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Patrick Golden", email = "ptgolden@email.unc.com" }
+]
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+monarch-ingest-commons = "monarch_ingest_commons:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
