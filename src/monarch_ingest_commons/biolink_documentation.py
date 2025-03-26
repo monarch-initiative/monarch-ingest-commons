@@ -20,11 +20,13 @@ CLASS_DOCUMENTATION_MARKER = "# !DocumentClass"
 # A matcher for statements that have the above sigil preceding them.
 biolink_statement_pattern = m.SimpleStatementLine(
     leading_lines=[
+        m.ZeroOrMore(),
         m.EmptyLine(
             comment=m.Comment(
                 value=m.MatchIfTrue(lambda text: text.startswith(CLASS_DOCUMENTATION_MARKER)),
             ),
         ),
+        m.ZeroOrMore(),
     ],
 )
 
