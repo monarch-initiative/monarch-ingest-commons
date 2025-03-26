@@ -11,6 +11,7 @@ import jedi
 import libcst as cst
 import libcst.matchers as m
 from jedi.api.classes import Name
+from jedi.api.environment import Environment
 from libcst.metadata import CodeRange, PositionProvider
 
 # The sigial that marks that the following line contains a biolink class that should be documented.
@@ -350,12 +351,19 @@ class DocumentedStatementsVisitor(m.MatcherDecoratableVisitor):
         self.documented_classes.append(documentated_class)
 
 
-def extract_biolink_documentation(script_path: Path) -> list[DocumentedClass]:
+def extract_biolink_documentation(
+    script_path: Path,
+    detect_venv: bool = False,
+) -> list[DocumentedClass]:
     with script_path.open("r") as fp:
         module = cst.parse_module(fp.read())
 
-    project = jedi.get_default_project(script_path)
-    environment = jedi.create_environment(path=project.path / ".venv")
+    environment: Environment | None = None
+
+    if detect_venv:
+        project = jedi.get_default_project(script_path)
+        environment = jedi.create_environment(path=project.path / ".venv")
+
     script = jedi.Script(path=script_path, environment=environment)
 
     wrapper = cst.MetadataWrapper(module)
