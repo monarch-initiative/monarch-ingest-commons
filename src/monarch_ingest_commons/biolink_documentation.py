@@ -169,7 +169,7 @@ class DocumentedStatementsVisitor(m.MatcherDecoratableVisitor):
 
     METADATA_DEPENDENCIES = (PositionProvider,)
 
-    def __init__(self, script: jedi.Script):
+    def __init__(self, script: jedi.Script) -> None:
         self.script = script
         self.call_pos = 0
         self.source_assigns_by_row: DefaultDict[int, list[str]] = defaultdict(list)
@@ -263,7 +263,7 @@ class DocumentedStatementsVisitor(m.MatcherDecoratableVisitor):
 
         return sources
 
-    def _get_arg_const(self, node: cst.Arg):
+    def _get_arg_const(self, node: cst.Arg) -> str | None:
         match node.value:
             case cst.SimpleString(value=value):
                 return value[1:-1]
@@ -323,7 +323,6 @@ class DocumentedStatementsVisitor(m.MatcherDecoratableVisitor):
         The `Gene` call node will be targeted, but the `get_name` call node (which is farther down the tree) will not.
 
         """
-
         match node.func:
             case cst.Name():
                 call_range = self._get_code_range(node.func)
