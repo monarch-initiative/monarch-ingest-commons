@@ -5,12 +5,12 @@ Functions to automate the creation of documentation of Biolink classes written f
 import dataclasses
 from collections import defaultdict
 from pathlib import Path
-from typing import Sequence, DefaultDict
+from typing import DefaultDict, Sequence
 
 import jedi
-from jedi.api.classes import Name
 import libcst as cst
 import libcst.matchers as m
+from jedi.api.classes import Name
 from libcst.metadata import CodeRange, PositionProvider
 
 # The sigial that marks that the following line contains a biolink class that should be documented.
@@ -21,12 +21,10 @@ biolink_statement_pattern = m.SimpleStatementLine(
     leading_lines=[
         m.EmptyLine(
             comment=m.Comment(
-                value=m.MatchIfTrue(
-                    lambda text: text.startswith(CLASS_DOCUMENTATION_MARKER)
-                )
-            )
-        )
-    ]
+                value=m.MatchIfTrue(lambda text: text.startswith(CLASS_DOCUMENTATION_MARKER)),
+            ),
+        ),
+    ],
 )
 
 # A matcher for accessing a field in a koza transform where the data is stored in a variable called `row`. For
@@ -255,9 +253,7 @@ class DocumentedStatementsVisitor(m.MatcherDecoratableVisitor):
         is_defined_name = m.matches(node.value, m.Name())
         if is_defined_name:
             name_range = self._get_code_range(node.value)
-            assignment = self.script.goto(
-                name_range.start.line, name_range.start.column
-            )[0]
+            assignment = self.script.goto(name_range.start.line, name_range.start.column)[0]
             assert isinstance(assignment, Name)
             assert isinstance(assignment.line, int)
             sources += self.source_assigns_by_row[assignment.line]
@@ -333,26 +329,19 @@ class DocumentedStatementsVisitor(m.MatcherDecoratableVisitor):
             case _:
                 return
 
-        inferred_type = self.script.infer(
-            call_range.start.line, call_range.start.column
-        )[0]
+        inferred_type = self.script.infer(call_range.start.line, call_range.start.column)[0]
         assert isinstance(inferred_type, Name)
 
         is_biolink_class = (
             inferred_type.full_name is not None
-            and inferred_type.full_name.startswith(
-                "biolink_model.datamodel.pydanticmodel_v2."
-            )
+            and inferred_type.full_name.startswith("biolink_model.datamodel.pydanticmodel_v2.")
             and inferred_type.description.startswith("class ")
         )
 
         if not is_biolink_class:
             return
 
-        comments = [
-            cst.ensure_type(comment, cst.Comment)
-            for comment in m.findall(node, m.Comment())
-        ]
+        comments = [cst.ensure_type(comment, cst.Comment) for comment in m.findall(node, m.Comment())]
         parameters = [self._parse_arg(comments, arg) for arg in node.args]
         documentated_class = DocumentedClass(
             name=inferred_type.description[6:],
