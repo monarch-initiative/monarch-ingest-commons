@@ -10,6 +10,7 @@ requires-python = ">=3.10"
 dependencies = [
     "jedi>=0.19.2",
     "libcst>=1.7.0",
+    "typer>=0.15.2",
 ]
 
 [project.scripts]
