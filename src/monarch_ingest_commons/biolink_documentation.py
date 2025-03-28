@@ -160,6 +160,33 @@ class DocumentedClass:
     name: str
     fields: list[DocumentedField]
 
+    def as_markdown(self) -> str:
+        output = "|name|source column|value|notes|\n"
+        output += "|----|----|----|\n"
+        for field in self.fields:
+            output += "|" + field.name + "|"
+
+            if field.annotations.source is not None:
+                output += field.annotations.source
+            elif field.parsed_source is not None:
+                output += ",".join([f"{name}" for name in field.parsed_source])
+
+            output += "|"
+
+            if field.annotations.value is not None:
+                output += field.annotations.value
+            elif field.constant is not None:
+                output += field.constant
+
+            output += "|"
+
+            if field.annotations.note is not None:
+                output += field.annotations.note
+            output += "|"
+
+        output += "\n"
+        return output
+
 
 class DocumentedStatementsVisitor(m.MatcherDecoratableVisitor):
     """

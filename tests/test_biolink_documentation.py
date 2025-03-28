@@ -95,6 +95,7 @@ def main():
     assert classes[0].fields[0].annotations.note == "this is a note"
     assert classes[0].fields[0].annotations.source == "this is the source"
     assert classes[0].fields[0].annotations.value == "this is about the value"
+    assert isinstance(classes[0].as_markdown(), str)
 
 
 def test_extract_multiline_annotations():
