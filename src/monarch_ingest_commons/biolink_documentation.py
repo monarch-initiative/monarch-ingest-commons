@@ -68,7 +68,8 @@ class DocumentedFieldAnnotations:
         2. Source - An indication of the source of the parameter in a data file. This is able to be inferred
            automatically (see `find_kw_source`), but the heuristics there are not perfect. This can take multiple
            annotations if necessary.
-        3. Type - The type expected by the parameter. (Currently unused).
+        3. Value - Some description about the value of the parameter. This is currently inferred if the value of the
+           field is a constant.
 
     Annotations must appear directly above the parameter declaration in the form:
         # annotation_name: annotation_content
@@ -93,12 +94,12 @@ class DocumentedFieldAnnotations:
 
     :param note: Curatorial decisions about the parameter.
     :param source: The column/record in the source file from which this parameter was derived.
-    :param _type: The type of this parameter (currently unused).
+    :param value: A note about the value of this parameter.
     """
 
     note: str | None = None
     source: str | None = None
-    _type: str | None = None
+    value: str | None = None
 
     @classmethod
     def from_comment_strs(cls, comments: list[str]) -> "DocumentedFieldAnnotations":
@@ -106,9 +107,9 @@ class DocumentedFieldAnnotations:
         metadata: dict[str, str] = {}
         cur_group = None
         for comment_str in comments:
-            if comment_str.startswith("# type: "):
-                metadata["type"] = comment_str.replace("# type: ", "")
-                cur_group = "type"
+            if comment_str.startswith("# value: "):
+                metadata["value"] = comment_str.replace("# value: ", "")
+                cur_group = "value"
                 continue
             if comment_str.startswith("# source: "):
                 metadata["source"] = comment_str.replace("# source: ", "")
@@ -125,7 +126,7 @@ class DocumentedFieldAnnotations:
                 metadata[cur_group] = existing + " " + comment_str[2:]
 
         return cls(
-            _type=metadata.get("type", None),
+            value=metadata.get("value", None),
             note=metadata.get("note", None),
             source=metadata.get("source", None),
         )

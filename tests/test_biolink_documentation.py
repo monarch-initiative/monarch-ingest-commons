@@ -86,7 +86,7 @@ def main():
     gene = Gene(
         # note: this is a note
         # source: this is the source
-        # type: this is the type
+        # value: this is about the value
         label="label"
     )
         """
@@ -94,7 +94,7 @@ def main():
 
     assert classes[0].fields[0].annotations.note == "this is a note"
     assert classes[0].fields[0].annotations.source == "this is the source"
-    assert classes[0].fields[0].annotations._type == "this is the type"
+    assert classes[0].fields[0].annotations.value == "this is about the value"
 
 
 def test_extract_multiline_annotations():
