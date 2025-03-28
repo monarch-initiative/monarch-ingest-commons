@@ -1,2 +1,3 @@
-def main() -> None:
-    print("Hello from monarch-ingest-commons!")
+from importlib.metadata import version
+
+__version__ = version("monarch_ingest_commons")

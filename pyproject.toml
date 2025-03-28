@@ -1,8 +1,8 @@
 [project]
 name = "monarch-ingest-commons"
-version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
+dynamic = ["version"]
 authors = [
     { name = "Patrick Golden", email = "ptgolden@email.unc.com" }
 ]
@@ -13,12 +13,15 @@ dependencies = [
     "typer>=0.15.2",
 ]
 
-[project.scripts]
-monarch-ingest-commons = "monarch_ingest_commons:main"
+# [project.scripts]
+# monarch-ingest-commons = "monarch_ingest_commons:main"
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
 
 [dependency-groups]
 dev = [

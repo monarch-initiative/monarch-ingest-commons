@@ -365,7 +365,6 @@ wheels = [
 
 [[package]]
 name = "monarch-ingest-commons"
-version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "jedi" },
